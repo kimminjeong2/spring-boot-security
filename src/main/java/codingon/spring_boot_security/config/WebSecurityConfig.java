@@ -15,14 +15,14 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-
 import java.util.Arrays;
 
 @Configuration // 해당 클래스가 spring 설정 클래스
 @EnableWebSecurity // spring security 활성화
 public class WebSecurityConfig {
     @Autowired
-    JwtAuthenticationFilter jwtAuthenticationFilter;
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
 
     // 보안 필터 체인 구현
     @Bean

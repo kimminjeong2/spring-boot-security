@@ -3,6 +3,7 @@ package codingon.spring_boot_security.controller;
 import codingon.spring_boot_security.dto.ResponseDTO;
 import codingon.spring_boot_security.dto.UserDTO;
 import codingon.spring_boot_security.entity.UserEntity;
+import codingon.spring_boot_security.security.TokenProvider;
 import codingon.spring_boot_security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +48,7 @@ public class UserController {
                     .build();
             return ResponseEntity.ok().body(responsedUserDTO);
         } catch (Exception e) {
-            ResponseDTO responseDTO = ResponseDTO.builder()
+            ResponseDTO<Object> responseDTO = ResponseDTO.builder()
                     .error(e.getMessage())
                     .build();
             return ResponseEntity.badRequest().body(responseDTO);
@@ -58,7 +59,7 @@ public class UserController {
     public ResponseEntity<?> authenticate(@RequestBody UserDTO userDTO) {
         UserEntity user = userService.getByCredentials(userDTO.getEmail(), userDTO.getPassword(), passwordEncoder);
 
-        if(user != null) {
+        if (user != null) {
             String token = tokenProvider.create(user);
             UserDTO responseUserDTO = UserDTO.builder().email(user.getEmail()).id(user.getId()).token(token).build();
             return ResponseEntity.ok().body(responseUserDTO);
