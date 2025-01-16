@@ -18,9 +18,13 @@ public class TodoEntity {
     @Column(name = "userId", nullable = false)
     private String userId; // user 테이블의 id 값
 
+    // title을 수정합니다.
+    @Setter
     @Column(name = "title", nullable = false)
     private String title;
 
+    // done 값을 수정합니다.
+    @Setter
     @Column(name = "done", nullable = false)
     private boolean done;
 
@@ -31,4 +35,5 @@ public class TodoEntity {
                 .done(done)
                 .build();
     }
+
 }

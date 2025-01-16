@@ -67,4 +67,57 @@ public class TodoController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateTodo(
+            @AuthenticationPrincipal String userId,
+            @PathVariable Long id,  // PathVariable로 id를 받아옵니다.
+            @RequestBody TodoDTO todoDTO) {
+
+        try {
+            // 수정할 TodoEntity 찾기
+            TodoEntity updatedEntity = todoService.update(id, userId, todoDTO);
+
+            // 수정된 엔티티 -> DTO 변환
+            TodoDTO updatedDto = new TodoDTO(updatedEntity);
+
+            // ResponseDTO 생성
+            ResponseDTO<TodoDTO> responseDTO = ResponseDTO.<TodoDTO>builder()
+                    .data(List.of(updatedDto))
+                    .build();
+
+            return ResponseEntity.ok().body(responseDTO);
+        } catch (Exception e) {
+            String err = e.getMessage();
+            ResponseDTO<TodoDTO> responseDTO = ResponseDTO.<TodoDTO>builder()
+                    .error(err)
+                    .build();
+
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteTodo(
+            @AuthenticationPrincipal String userId,
+            @PathVariable Long id) {
+
+        try {
+            // 삭제할 TodoEntity 찾기
+            todoService.delete(id, userId);
+
+            // ResponseDTO 생성 (삭제 성공)
+            ResponseDTO<Void> responseDTO = ResponseDTO.<Void>builder()
+                    .message("Todo deleted successfully")
+                    .build();
+
+            return ResponseEntity.ok().body(responseDTO);
+        } catch (Exception e) {
+            String err = e.getMessage();
+            ResponseDTO<Void> responseDTO = ResponseDTO.<Void>builder()
+                    .error(err)
+                    .build();
+
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
+    }
 }
